@@ -1,0 +1,24 @@
+
+{% load tailwind_filters %}
+ 
+<div class="flex justify-center w-1/2 ">
+
+
+
+
+</div>
+<section class="text-gray-600 body-font relative">
+
+  <div class="container px-5 py-24 mx-auto flex">
+    <div class=" bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
+      <form ction="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Login</button>
+    
+     
+    </form>
+ 
+    </div>
+  </div>
+</section>

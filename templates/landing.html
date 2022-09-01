@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='fixed bottom-0 w-full'>
+    <a href="{% url 'posts:createpost' %}" class='my-8 float-right px-5 py-2 mb-10 mr-10 bg-blue-700 text-white  font-bold tracking-wide rounded-full text-xl focus:outline-none'>+</a>
+</div>
+{% endblock content %}
