@@ -1,7 +1,8 @@
 
 from django.contrib import admin
 from django.urls import path,include
-
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
@@ -31,6 +32,7 @@ urlpatterns = [
        path('passwordreset/', PasswordResetView.as_view(), name="password_reset_view"),
        path('passwordresetdone/', PasswordResetDoneView.as_view(), name="password_reset_done"),
        path('edit-profile/<pk>', EditProfileView.as_view(), name="edit_profile"),
+       
        path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name="password-reset-confirm"),
        path('passwordresetcomplete/', PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
@@ -38,3 +40,10 @@ urlpatterns = [
 
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

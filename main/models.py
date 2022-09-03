@@ -5,6 +5,8 @@ from django.db.models.signals import post_save, pre_save
 class User(AbstractUser):
     phone_number = models.CharField(max_length=20)
     pfp = models.ImageField()
+    first_name = models.CharField(max_length=40)
+    last_name = models.CharField(max_length=40)
     
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -17,3 +19,12 @@ def post_user_created_signal(sender, instance, created, **kwargs):
         UserProfile.objects.create(user=instance)
 
 post_save.connect(post_user_created_signal, sender=User)
+
+class Photo(models.Model):
+    file = models.ImageField()
+    description = models.CharField(max_length=255, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'photo'
+        verbose_name_plural = 'photos'

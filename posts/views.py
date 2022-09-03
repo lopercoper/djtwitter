@@ -31,24 +31,11 @@ class CreatePostView(CreateView):
         post.save()
         return super(CreatePostView, self).form_valid(form)
 
-class PostListView(CreateView):
+class PostListView(ListView):
     
     template_name = "posts/postlist.html"
     context_object_name = "posts"
-    form_class = PostModelForm
-
+    paginate_by = 1
     model = Post
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['posts'] = Post.objects.all()
-        return context
-
-    def get_success_url(self):
-        return reverse("postlist")
-
-    def form_valid(self, form):
-        poster = self.request.user
-        post = form.save(commit=False)
-        post.user = poster
-        post.save()
-        return super(PostListView, self).form_valid(form)
+    def get_queryset(self):
+        return Post.objects.all()
