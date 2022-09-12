@@ -21,10 +21,12 @@ class SignUpForm(UserCreationForm):
         fields = ( 'first_name', 'last_name', 'username', 'email', 'password1', 'password2')
 
 class CustomUserChangeForm(UserChangeForm):
+    
     class Meta(UserChangeForm.Meta):
         model = User
         fields = ('username','first_name','last_name','pfp')
         
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
         del self.fields['password']

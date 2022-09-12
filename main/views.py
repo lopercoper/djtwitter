@@ -36,12 +36,4 @@ class SignupView(CreateView):
     def get_success_url(self):
         return reverse("login")
 
-class EditProfileView(UpdateView):
-    form_class = CustomUserChangeForm
-    template_name = "edit-profile.html"
-            
-    def get_queryset(self):
-        return User.objects.all()
-    
-    def get_success_url(self):
-        return reverse("postlist")
+

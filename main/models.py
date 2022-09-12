@@ -5,12 +5,16 @@ from django.db.models.signals import post_save, pre_save
 class User(AbstractUser):
     phone_number = models.CharField(max_length=20)
     pfp = models.ImageField()
-    first_name = models.CharField(max_length=40)
-    last_name = models.CharField(max_length=40)
-    
+    first_name = models.CharField(max_length = 10)
+    last_name = models.CharField(max_length = 10)
+    description = models.TextField (max_length= 200)
+    followers = models.ManyToManyField("self", blank=True, symmetrical=False)
+    following = models.ManyToManyField("self", blank=True)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+
+
     def __str__(self):
         return self.user.username
 

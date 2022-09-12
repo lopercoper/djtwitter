@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load thumbnail %}
+
+{% block content %}
+{% include "navbar.html" %}
+
+{% for user in users %}
+<p class="title-font font-medium text-center text-xl mt-5 mb-5">{{ user.first_name }} {{ user.last_name }}</p>
+<section class="text-gray-600 body-font overflow-hidden">
+    <div class="max-w-4xl infinite-item container px-5  mx-auto">
+        <div class="flex items-center lg:w-3/5 md:w-2/5 sm:w-2/5 mx-auto rounded pb-3 border-gray-200 sm:flex-row flex-col">
+       
+          <div class="ml-5 mr-5 flex-grow sm:text-left text-center sm:mt-0">
+            <a href="#" class=" h-30 w-30 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+                <img src="{% thumbnail user.pfp 80x80 crop %}" class="rounded-full max-w-full h-auto" alt="">
+              </a>
+          <h1 class="text-gray-900 text-lg title-font font-medium">{{ user.first_name}} {{ user.last_name}} </h1>
+          <h2 class="text-sm title-font text-gray-500">@{{ user.username }}</h2>
+          <h2 class="text-sm title-font mt-3 text-black">{{ user.description }}</h2>
+          
+          <div class="grid grid-flow-col mb-5 mt-5 auto-cols-max">
+         
+            <div class="grid grid-flow-col mb-5 mt-5 auto-cols-max">
+                <a href="" class="text-sm title-font text-black font-bold flex-grow mr-2">{{ number_of_followers }} </a>
+                
+                <a href="" class="text-sm title-font text-gray-600 hover:text-black flex-grow">Followers</a>
+    
+                <a href="" class="text-sm title-font text-black font-bold flex-grow ml-5 mr-2 ">{{ number_of_following }} </a>
+                <a href="" class="text-sm title-font text-gray-600 hover:text-black flex-grow">Following</a>
+              </div>
+          </div>
+          <div class="grid grid-flow-col mb-5 auto-cols-max gap-5 ">
+            {% if is_following %}
+            <form action="{% url 'user:remove-follower' user.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Unfollow</button>
+            </form>
+            {% else %}
+            <form action="{% url 'user:add-follower' user.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Follow</button>
+            </form>
+            {% endif %}
+            <a href=""><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-500 hover:text-black w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              </a>
+          </div>
+
+          <div class="flex mb-4">
+            <a href="" class="flex-grow title-font font-medium text-gray-900 hover:bg-gray-100 border-b-2 text-center border-indigo-500 py-1 text-md ">Tweets</a>
+            <a href="" class="flex-grow title-font font-medium text-gray-500 hover:bg-gray-100 border-b-2 text-center border-gray-300 py-1 text-md">Tweets & replies</a>
+            <a href="" class="flex-grow title-font font-medium text-gray-500 hover:bg-gray-100 border-b-2 border-gray-300 py-1 text-center text-md">Media</a>
+            <a href="" class="flex-grow title-font font-medium text-gray-500 hover:bg-gray-100 border-b-2 border-gray-300 py-1 text-md text-center">Likes</a>
+          </div>
+
+{% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+         
+  
+{% for post in posts %}
+<a href="">
+
+<div class="text-gray-600 body-font infinite-container">
+    <div class="max-w-4xl  infinite-item container px-5  mx-auto">
+      <div class="flex items-center lg:w-3/5 md:w-2/5 sm:w-2/5 mx-auto border-b rounded pb-3 border-gray-200 sm:flex-row flex-col">
+     
+        <div class="ml-5 mr-5 flex-grow sm:text-left text-center sm:mt-0">
+          
+          <div class="grid grid-flow-col mt-5 auto-cols-max">
+            {% if post.user.username == user.username %}
+            <a href="{% url 'user:profile' %}" class="sm:w-12 sm:h-12 h-12 w-12 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+              <img src="{% thumbnail post.user.pfp 80x80 crop %}" class="rounded-full max-w-full h-auto" alt="">
+            </a>
+            <a href="{% url 'user:profile' %}" class="title-font hover:underline font-medium text-gray-800 mr-1">{{ post.user.first_name }} {{ post.user.last_name }}</a>
+            <a href="{% url 'user:profile' %}" class=" text-gray-500 mr-3">@{{ post.user.username }}</a>
+            {% else %}
+            <a href="{% url 'user:public-profile' pk=post.user.pk %}" class="sm:w-12 sm:h-12 h-12 w-12 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+              <img src="{% thumbnail post.user.pfp 80x80 crop %}" class="rounded-full max-w-full h-auto" alt="">
+            </a>
+            <a href="{% url 'user:public-profile' pk=post.user.pk %}" class="title-font hover:underline font-medium text-gray-800 mr-1">{{ post.user.first_name }} {{ post.user.last_name }}</a>
+            <a href="{% url 'user:public-profile' pk=post.user.pk %}" class=" text-gray-500 mr-3">@{{ post.user.username }}</a>
+            {% endif %}
+           
+            <div class="text-gray-500"> · {{post.whenposted}}</div>
+
+          </div>
+          <p class="leading-relaxed break-all mt-3">{{ post.post_body}}</p>
+
+          <div class="btn-contain">
+            <div class="grid grid-flow-col auto-cols-max gap-20 mt-5">
+
+            <div class="grid grid-flow-col auto-cols-max gap-2">
+               
+          
+              <button class="like" 
+              id="button-{{ post.pk}}" 
+              data-href="{% url 'posts:add-like' post.pk %}" name="like-btn" data-pk="{{ post.pk }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </button>
+              
+            
+            <div id="refreshDivID-{{ post.pk }}">
+              <div class="reloaded-divs-{{ post.pk }}">
+              <p class="mt-1 text-sm">{{ post.likes.count }}</p>
+            </div>
+          </div>
+
+
+            </div>
+       
+            <div class="grid grid-flow-col auto-cols-max gap-2">
+
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                </svg>
+                
+              </button>
+              <p class="mt-1 text-sm">{{ post.rt_count}}</p>
+
+            </div>
+                      
+            <div class="grid grid-flow-col auto-cols-max gap-2">
+              <a href="{% url 'posts:comments' post.pk %}">
+
+              <button >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-2 w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                </svg>
+                
+              </button>
+              <p class="mt-1 text-sm">{{ post.comment.count}}</p>
+            </a>
+
+            </div>
+
+            <div>
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 ml-2 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                
+              
+              </button>
+            </div>
+         
+</div>
+          </div>
+       
+        </div>
+      </div>
+      
+        
+    </div>
+    </div>
+  
+  </div>
+{% endfor %}
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if page_obj.has_next %}
+        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">]</a>
+        {% endif %}
+        </span>
+    </div>
+</div>
+</div>
+</div>
+    
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="/static/js/infinite.min.js"></script>
+<script>
+var infinite = new Waypoint.Infinite({
+element: $('.infinite-container')[0],
+
+offset: 'bottom-in-view',
+
+onBeforePageLoad: function () {
+    $('.loading').show();
+},
+onAfterPageLoad: function () {
+    $('.loading').hide();
+}
+
+});
+</script>
+<script>
+
+  $(".like").click(function(){
+      var postData = {csrfmiddlewaretoken: '{{ csrf_token }}'}
+      var primaryKey = $(this).attr('data-pk');
+
+      $.ajax({
+          type: "POST",
+          url: $(this).attr("data-href"),
+          data: postData,
+      })
+      setTimeout(function() {
+        $("#refreshDivID-"+primaryKey).load("#refreshDivID-"+primaryKey+" .reloaded-divs-"+primaryKey+" > *");
+    }, 200);
+
+  })
+  </script>
+{% endblock content %}
+
+
